@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
+<link rel="stylesheet" href="styles/sticky.css">
+  <ul class="sticky">
+    <% birthdays1.forEach(function(birthday){%>
+    <li>
+      <a href="#">
+          <h2><%= birthday.Name %></h2>
+          <p><%= birthday.Birthdate %></p>
+      </a>
+    </li>
+
+    <%})%>
+    
+  </ul>

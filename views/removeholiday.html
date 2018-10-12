@@ -1,0 +1,8 @@
+<h2>Remove Holidays</h2>
+<div>
+  <ul id="removeableHolidays" class="list-group ul">
+    <% holidays.forEach(function(holiday){ %>
+     <li id="<%= holiday.Id %>" data-holidayId="<%= holiday.Id %>" class='list-group-item list-group-item-success'><b><%= moment(holiday.Date__c).format("MMMM DD,YYYY")%> : <%= holiday.Name %></b><span  style='float: right' onclick='removeHoliday(this)'><i class='fa fa-close' style='font-size:24px;color:red'></i></span></li>
+    <% }) %>
+  </ul>
+</div>

@@ -1,0 +1,7 @@
+<option value="null">none</option>
+<% employee.forEach(function(emp2){ %>
+<%  if(reportinglead == emp2.Name){ %>
+ <option value='<%= emp2.Id %>' selected ><%= emp2.Name %></option>
+ <% } else { %>
+<option value='<%= emp2.Id %>' ><%= emp2.Name %></option>
+ <% } }); %>

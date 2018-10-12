@@ -1,0 +1,24 @@
+<h3>Employee details</h3>
+	<div class="obj-list" id="newtable">
+    	<table  id='table'  class=" table table-responsive table-hover" >
+		<thead>
+	  <th>employeeid</th>
+      <th>employeename</th>
+      <th>phone</th>
+      <th>Email</th>
+      <th>address</th>
+      <th>Active</th></thead>
+		<tbody  id="fields">
+		<% employee.forEach(function(emp1){ %>
+            <tr id='<%= emp1.Id%>' ><td><%= emp1.empid__c %></td><td><%= emp1.Name %></td><td><%= emp1.Phone__c %></td><td><%= emp1.Email__c %></td><td><%= emp1.address__c %></td>
+           
+            <%if (emp1.Active__c) { %>
+                <th><input type='checkbox' checked onchange='deactivate(this)' value="true" /></th>
+              <% } else{ %> 
+            	<th><input type='checkbox' onchange='deactivate(this)' value="false" />
+           <%  } %>
+        </tr>
+        <% }); %>
+		</tbody>
+		</table>
+	</div>

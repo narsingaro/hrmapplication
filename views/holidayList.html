@@ -1,0 +1,8 @@
+<% holidays.forEach(function(holiday){ %>
+<li id="<%= holiday.Id %>" class='list-group-item list-group-item-success'><b><%= moment(holiday.Date__c).format("MMMM DD,YYYY")%> : <%= holiday.Name %></b></li>
+<% }) %>
+<% if(showmore==true){%>
+<li align="right" style="list-style: none;"><a style="color:blue;cursor:pointer" onclick="showMoreHolidays()">Show More</a><input id="offset" type="hidden" value="<%= offset %>"/></li>
+<%}%>
+
+	

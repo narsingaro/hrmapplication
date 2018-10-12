@@ -1,0 +1,39 @@
+<div class="container" >
+     <form class="text-center" align="center">
+       <p class="h4 mb-4">Adding Employee</p>
+       <input type="textarea" id="empname" class="form-control mb-2" placeholder="employeeName" style="width:40%">
+       <input type="number" id="phone" class="form-control mb-2" placeholder="phone number" style="width:40%">
+       <input type="email" id="empemail" class="form-control mb-2" placeholder="E-mail address" style="width:40%" >
+       <div style="width:40%">
+        <label>Birthdate:</label>
+       <input type="Date" id="empbirthdate" class="form-control" >
+     </div>
+     <div style="width:40%">
+        <label>Date Of Joining:</label>
+       <input type="Date" id="empjoindate" class="form-control mb-2">
+     </div>
+       <input type="textarea" id="empbirthmsg" class="form-control mb-2" placeholder="Birthday message" style="width:40%" >
+       <input type="textarea" id="empannimsg" class="form-control mb-2" placeholder="Anniversary message" style="width:40%" >
+       <input type="textarea" id="address" class="form-control mb-2" placeholder="address" style="width:40%" >
+       <input type="textarea" id="username" class="form-control mb-2" placeholder="username" style="width:40%" >
+       <input type="textarea" id="password" class="form-control mb-2" placeholder="password" style="width:40%" >
+       <div style="width:40%">
+        <label>Employee Position:</label>
+       <select id="designation" class="form-control mb-2">
+          <option value="Employee">Employee</option>
+          <option value="Lead">Lead</option>
+          <option value="HR">HR</option>
+        </select>
+      </div>
+        <div style="width:40%" >
+        <label>Reporting lead</label>
+        <select id="reportinglead" class="form-control mb-2" >
+          <option value="null">none</option>
+          <% employee.forEach(function(emp2){ %>
+            <option value='<%= emp2.Id %> '><%= emp2.Name %></option>
+          <% }); %>
+        </select>
+      </div>
+        <button id="addemployee" class="btn btn-info btn-block my-2" type="button" style="width:40%" onclick="addemployeefun()" >AddEmployee</button>
+      </form>
+</div >

@@ -1,0 +1,27 @@
+<h3>Employee details</h3>
+	<div class="obj-list" id="newtable">
+    <table  id='table'  class=" table table-responsive table-hover" >
+		  <thead>
+	      <th>employeeid</th>
+        <th>employeename</th>
+        <th>phone</th>
+        <th>Email</th>
+        <th>address</th>
+        <th>Active</th>
+        <th>fulldetals</th>
+    </thead>
+		<tbody  id="fields">
+		  <% employee.forEach(function(emp1){ %>
+            <tr id='<%= emp1.empid__c %>'>
+              <td id='empid'><%= emp1.empid__c %> </td>
+              <td><%= emp1.Name %></td>
+              <td><%= emp1.Phone__c %></td>
+              <td><%= emp1.Email__c %></td>
+              <td><%= emp1.address__c %></td>
+              <td><%= emp1.Active__c %></td>
+              <td><button type="button" class="btn btn-default" value='<%= emp1.empid__c %>' onclick="viewEmployeeFullDetails(this)">VIEW</button></td>
+            </tr>
+      <% }); %>
+		</tbody>
+	</table>
+</div>

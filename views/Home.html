@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= title %></title>
+	<link rel="shortcut icon" href="images/Bullhorn-Logo.jpg"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles/sticky.css">
+  <meta name="viewport" content="width=device-width", initial-scale="1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      font-family: "Lato", sans-serif;
+    }
+    .popup-overlay {
+      visibility:hidden;
+    }
+    .popup-content {
+      visibility:hidden;
+    }
+    .form-control {
+      width: 50;
+    }
+    .fa-caret-down {
+      float: right;
+      padding-right: 8px;
+    }
+    .list-group-item-success {
+      height:30%;
+      margin-top:2%;
+      width:100%;
+    }   
+
+    .sidenav {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #ffd6cc;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      margin-top:120px;
+    }
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #ff0000;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidenav a:hover, .dropdown-btn:hover {
+      color: #f1f1f1;
+    }
+    .sidenav a:hover {
+      color: #cc6699;
+      text-decoration: none;
+    }
+    .sidenav a, .dropdown-btn {
+      padding: 6px 8px 6px 16px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #818181;
+      display: block;
+      border: none;
+      background: none;
+      width:100%;
+      text-align: left;
+      cursor: pointer;
+      outline: none;
+    }
+    .dropdown-container {
+      display: none;
+      background-color: #262626;
+      padding-left: 8px;
+    }
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 30px;
+      margin-left: 50px;
+    }
+    a{
+      cursor: pointer;
+      color: #818181;
+    } 
+  </style>
+  <script>
+    function showMoreHolidays(){
+      $.ajax({
+        type:'POST',
+        url: '/getMoreHolidays',
+        data: { offset : $("#offset").val()},
+        success:function(data){
+          $("#holidayItems li:last").remove();
+          $('#holidayItems').append(data);
+        }
+      });
+    }
+    function holidays(){
+      $.ajax({
+        type:'GET',
+        url: '/getHolidays',
+        success:function(data){
+          $("#listofholiday").show();
+          $('#holidayItems').html(data);
+        }
+      });
+    }
+    function addholiday(){
+      $("#employee").hide();
+      $("#body").show(); 
+      $("#employeedetail").hide();
+      $.get("/addholidaypage",function(data,status){
+        $("#body").html(data);               
+      });
+      closeNav();
+    }
+    function addemployee(){
+      $("#employee").hide();
+      $("#body").show(); 
+      $("#employeedetail").hide();
+      $.get("/addemployeepage",function(data,status){
+        $("#body").empty();
+        $("#body").append(data);               
+      }); 
+    }
+    function getRemoveHolidayPage(){
+      $("#employee").hide();
+      $("#body").show();
+      $("#employeedetail").hide(); 
+      $.get("/removeholidaypage",function(data,status){
+        $("#body").html(data);
+      });       
+    }
+    function removeHoliday(s)
+    {
+      $.ajax({
+        type:'POST',
+        url : '/removeHoliday',
+        data : { holidayId : $(s).parent().attr("data-holidayId") },
+        success : function(data){
+          if(data == 'Holiday Removed Successfully!!'){
+            //holidays();
+            getRemoveHolidayPage();
+            holidays();
+            alert(data);
+          }
+          else{
+            alert(data);
+          }
+        }
+      });
+    }
+    function employeedetails(){        
+      $("#body").hide();
+      $("#employeedetail").hide();
+      $("#offset").hide();
+      $.ajax({
+        type:'post',
+        url: '/listofemployee',
+        data:{
+          Id:$("#empId").val(),
+          position:$("#empPosition").val()
+        },
+        success : function(data){
+          $('#employee').html(data);
+          $("#employee").show();
+        }
+      });
+      closeNav();
+    }
+    /*function loadmore(){  
+      var offset1= $("#offset").val();
+      $.post("/loademployee",{offset:$("#offset").val()},function(data,status){
+        $('#fields').html(data);
+      });
+    }*/
+    function removeemployee(){
+      $("#body").hide();
+      $("#employeedetail").hide();
+      $.ajax({
+        type:'get',
+        url: '/removeemployee',
+        success : function(data){
+          $('#employee').html(data);
+          $("#employee").show();
+        }
+      });
+    }
+    function Activeemployeedetails(){
+      $("#employeedetail").hide();
+      $("#body").hide();
+      $.ajax({
+        type:'get',
+        url: '/activelistofemployee',
+        success : function(data){
+          $('#employee').html(data);
+          $("#employee").show();
+        }
+      });
+    }
+    function Inactiveemployeedetails(){
+      $("#body").hide();
+      $("#employeedetail").hide();
+      $.ajax({
+        type:'get',
+        url: '/inactivelistofemployee',
+        success : function(data){
+          $('#employee').html(data);
+          $("#employee").show();
+        }
+      });
+    }
+    function deactivate(s){
+      var id=$(s).parents('tr').attr('id');
+      var value=$(s).val();
+      $.post("/deactivate",{Id:$(s).parents('tr').attr('id'),value:$(s).val()},function(data,status){
+        alert(data);
+      });
+    }
+    function viewEmployeeFullDetails(s){
+      $.get("/empdetails?id="+$(s).val(),function(data,status){
+        $("#employeedetail").html(data);
+        $("#employeedetail").show();
+      });
+    }
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "215px";
+    }
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+    function edittherecord(){
+      $.post("/updateemployee",
+        {
+          Id:$('#empdetailtable tr').first().attr('id'),
+          empid:$("#employeeid1").val(),
+          employeename:$("#employeename1").val(),
+          phone:$("#employeephone1").val(),
+          Email:$("#employeeemail1").val(),
+          address:$("#employeeaddress1").val(),
+          username:$("#employeeUsername").val(),
+          password:$("#employeePassword").val(),
+          designation:$("#employeeDesignation").val(),
+          Active:$("#employeeactive").prop("checked"),
+          reportinglead:$("#employeereportinglead").val(),
+          userid:$("#empId").val(),
+          position:$("#empPosition").val(),
+          birthdate:$("#employeebirthdate").val(),
+          joindate:$("#employeejoindate").val(),
+          birthmsg:$("#employeebirthmsg").val(),
+          annimsg:$("#employeeannimsg").val()
+        },function(data,status){
+                  alert(data.message);
+                  $("#employeedetail").html(data.empdetailtable);
+                  $('#employee').html(data.emptable);
+                  $('#birthdaysList').html(data.birthdays);
+      });
+    }
+    function addemployeefun(){
+      $.post("/addemployee",
+        {
+         employeeid: $("#empid").val(),
+         employeename:$("#empname").val(),
+         phone:$("#phone").val(),
+         Email:$("#empemail").val(),
+         birthdate:$("#empbirthdate").val(),
+         joindate:$("#empjoindate").val(),
+         birthmsg:$("#empbirthmsg").val(),
+         annimsg:$("#empannimsg").val(),
+         address:$("#address").val(),
+         username:$("#username").val(),
+         password:$("#password").val(),
+         designation:$("#designation").val(),
+         reportinglead:$("#reportinglead").val()
+        },function(data,status){
+            alert(data);
+            addemployee();
+      });
+    }
+    function editEmployeeModal(){
+      $.ajax({
+        type:'post',
+        url: '/addreportinglead',
+        data:{ reportinglead:$('#empdetailtable tr').find("#empreportinglead").html() },
+        success : function(data){
+          $('#employeereportinglead').html(data);
+        }
+      });
+      if($("#empPosition").val() == "HR"){
+        $('#employeereportinglead').prop('disabled', false);
+        $('#employeejoindate').prop('disabled', false);
+        $('#employeeDesignation').prop('disabled', false);
+        $('#employeeDesignation').val($('#empdetailtable tr').find("#empDesingnation").html());
+        if($('#empdetailtable tr').find("#empactive").html() == 'true'){
+          $('#employeeactive').prop('disabled', false);
+          $('#employeeactive').prop('checked', true);
+        }
+        else{
+          $('#employeeactive').prop('disabled', false);
+          $('#employeeactive').prop('checked', false);
+        }
+      }
+      else
+      {
+        $('#employeeDesignation').val($('#empdetailtable tr').find("#empDesingnation").html());
+        if($('#empdetailtable tr').find("#empactive").html() == 'true'){
+          $('#employeeactive').prop('checked', true);
+        }
+        else{
+          $('#employeeactive').prop('checked', false);
+        }
+      }
+      $('#employeeid1').val($('#empdetailtable tr').find("#empid1").html());
+      $('#employeename1').val($('#empdetailtable tr').find("#empname").html());
+      $('#employeephone1').val($('#empdetailtable tr').find("#empphone").html());
+      $('#employeejoindate').val($('#empdetailtable tr').find("#empjoindate").html());
+      $('#employeebirthmsg').val($('#empdetailtable tr').find("#empbirthmessage").html());
+      $('#employeeannimsg').val($('#empdetailtable tr').find("#empannimessage").html());
+      $('#employeebirthdate').val($('#empdetailtable tr').find("#empbirthdate").html());
+      $('#employeeemail1').val($('#empdetailtable tr').find("#empemail").html());
+      $('#employeeaddress1').val($('#empdetailtable tr').find("#empaddress").html());
+      $('#employeeUsername').val($('#empdetailtable tr').find("#empUsername").html());
+      $('#employeePassword').val($('#empdetailtable tr').find("#empPassword").html());
+    }
+  </script>
+</head>
+<body>
+  <input type="hidden" id="empId" name="empId" value='<%= details.Id %>' />
+  <input type="hidden" id="empPosition" name="empPosition" value= '<%= details.position %>'  />
+	<div class="container-fluid">
+		<div class="row" style="border: 1px solid black">
+			<div class="col-lg-2 col-sm-2 col-xs-2 col-md-2">
+        <img src="images/Bullhorn-Logo.jpg" height="120" width="150"/>
+      </div>
+      <div class="col-lg-10 col-sm-10 col-xs-10 col-md-10 text-left">
+        <h1 style="font-size: 80px">Bullhorn HRM</h1>
+			</div>
+    </div>
+    <div class="row" style="border: 1px solid black">
+	    <div class="col-lg-2 col-sm-2 col-xs-2 col-md-2">
+        <div id="mySidenav" onmouseleave="closeNav()" class="sidenav">
+          <a href="javascript:void(0)" style="text-align: right;" class="closebtn" onclick="closeNav()">&#9776;</a>
+            <% if( details.position == 'HR') {%>       
+              <a href="#">About</a>
+              <a onclick="addholiday()">Add Holiday</a>
+              <a onclick="getRemoveHolidayPage()">Remove Holiday</a>
+              <a onclick="addemployee()">Add Employee</a>
+              <a onclick="employeedetails()">Employee Details</a>
+              <a onclick="Activeemployeedetails()">Active Employees</a>
+              <a onclick="Inactiveemployeedetails()">Inactive Employees</a>
+              <a onclick="removeemployee()">Remove Employee</a>
+              <a href="#">Contact</a>
+            <% } else {%>
+              <a href="#">About</a>
+              <a href="#">Contact</a>
+            <% } %>
+        </div>
+				<span onmouseenter="openNav()"  style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+      </div>
+    </div>
+		<div class="row"  class="h-100 d-inline-block"  style="border: 1px solid black">
+      <div  class="col-lg-8 col-sm-8 col-xs-8 col-md-8">
+        <div id="body"></div> 
+        <div id="employee">
+          <h3>Employee details</h3>
+          <div class="obj-list" id="newtable">
+             <table  id='table'  class=" table table-responsive table-hover" >
+      <thead>
+        <th>employeeid</th>
+        <th>employeename</th>
+        <th>phone</th>
+        <th>Email</th>
+        <th>address</th>
+        <th>Active</th>
+        <th>fulldetals</th>
+    </thead>
+    <tbody  id="fields">
+      <% employee.forEach(function(emp1){ %>
+            <tr id='<%= emp1.empid__c %>'>
+              <td id='empid'><%= emp1.empid__c %> </td>
+              <td><%= emp1.Name %></td>
+              <td><%= emp1.Phone__c %></td>
+              <td><%= emp1.Email__c %></td>
+              <td><%= emp1.address__c %></td>
+              <td><%= emp1.Active__c %></td>
+              <td><button type="button" class="btn btn-default" value='<%= emp1.empid__c %>' onclick="viewEmployeeFullDetails(this)">VIEW</button></td>
+            </tr>
+      <% }); %>
+    </tbody>
+  </table>
+          </div>
+        </div>
+        <div id="employeedetail" align="center"></div> 
+      </div>
+      <div class="col-lg-4 col-sm-4 col-xs-4 col-md-4">
+        <div id="listofholiday">
+          <h1>Holidays List</h1>
+          <div  style="max-height: 300px;overflow: auto">
+            <ul id="holidayItems" class="list-group ul">
+              <% holidays.forEach(function(holiday){ %>
+              <li id="<%= holiday.Id %>" class='list-group-item list-group-item-success'><b><%= moment(holiday.Date__c).format("MMMM DD,YYYY")%> : <%= holiday.Name %></b></li>
+              <% }) %>
+              <% if(showmore==true){%>
+              <li align="right" style="list-style: none;"><a style="color:blue;cursor:pointer" onclick="showMoreHolidays()">Show More</a><input id="offset" type="hidden" value="<%= offset %>"/></li>
+              <%}%>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h1>Upcoming Birthdays</h1>
+          <div id="birthdaysList" style="background-image: url(images/birthday_wallpaper.jpg);max-height:400px;overflow-y: auto;">
+            <ul class="sticky">
+            <% birthdays1.forEach(function(birthday){%>
+            <li>
+              <a href="#">
+                <h2><%= birthday.Name %></h2>
+                <p><%=birthday.Birthdate %></p>
+              </a>
+            </li>
+            <%})%>
+            </ul>
+          </div>
+        </div>
+    </div>
+    <div >
+    </div>
+   <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" align="center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+       <form class="text-center " >
+        <input type="text" id="employeeid1" class="form-control mb-2"  disabled style="width:60%" >
+        <input type="textarea" id="employeename1" class="form-control mb-2" style="width:60%" >
+        <input type="Date" id="employeebirthdate" class="form-control mb-2"  style="width:60%" >
+        <input type="Date" id="employeejoindate" class="form-control mb-2" disabled style="width:60%" >
+        <input type="textarea" id="employeebirthmsg" class="form-control mb-2" style="width:60%" >
+        <input type="textarea" id="employeeannimsg" class="form-control mb-2"  style="width:60%" >
+        <input type="number" id="employeephone1" class="form-control mb-2" style="width:60%">
+        <input type="email" id="employeeemail1"  class="form-control mb-2" style="width:60%" >
+        <input type="textarea" id="employeeaddress1" class="form-control mb-2" style="width:60%" >
+        <label> Active</label><input type="checkbox" id="employeeactive" style="width:60%" disabled  >
+        <input type="textarea" id="employeeUsername" class="form-control mb-2" style="width:60%" >
+        <input type="textarea" id="employeePassword" class="form-control mb-2" style="width:60%" >
+        <select id="employeeDesignation" class="form-control mb-2" style="width:60%" disabled >
+          <option value="Employee">Employee</option>
+          <option value="Lead">Lead</option>
+          <option value="HR">HR</option>
+         </select>
+        <select id="employeereportinglead" class="form-control mb-2" style="width:60%" disabled >
+        </select>
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edittherecord()">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+	</div>
+</body>
+</html>

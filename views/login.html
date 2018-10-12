@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <Title>Login Page</Title>
+    <link rel="shortcut icon" href="images/Bullhorn-Logo.jpg"/>
+    <meta name="viewport" content="width=device-width", initial-scale="1.0" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+var reForEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+var reForPassword=/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+$(document).ready(function(){
+    $("#forgotPassword").click(function(){
+        $("#ModalForgotPassword").modal();
+    });
+    $("#formButton1").click(function(){
+        var email=$("#inputEmail").val();
+        if((email.value=='' || !email.match(reForEmail))){
+              $("#errorEmail").text("*Invalid Username");
+              $("#inputEmail").css("border","1px solid #FF0000");
+        }
+        else{
+              $("#errorEmail").empty();
+              $("#inputEmail").css("border","1px solid #ccc");
+        }
+        var pass=$("#inputPassword").val();
+        if((pass=='' || !pass.match(reForPassword))){
+              $("#errorPass").text("*Invalid Password");
+              $("#inputPassword").css("border","1px solid #FF0000");
+        }
+        else{
+              $("#errorPass").empty();
+              $("#inputPassword").css("border","1px solid #ccc");
+        }
+        if(!(email.value=='' || !email.match(reForEmail)) && !(pass=='' || !pass.match(reForPassword)) ){
+                  $.post("/loginuser",
+                 {
+                 username:email,
+                 password:pass
+                 },
+                 function(data,status)
+                 {
+                  
+                  if(data == 'invalid')
+                  {
+                    alert('invalid username and password');
+                    
+                    
+                  }
+                  else
+                  {
+                    $("#empId").val(data.Id);
+                    $("#empPosition").val(data.position);
+                     $("#login-form").submit();
+                  }
+
+                 });
+
+               // $("#login-form").submit();
+
+        }
+    });
+    $("#formButton2").click(function(){
+        var email1=$("#forgotInputEmail").val();
+        if(email1=='' || !email1.match(reForEmail)){
+            $("#forgotInputEmail").setCustomValidity("Enter valid Email Address");
+        }
+        else{
+            $("#forgotInputEmail").setCustomValidity("");
+        }
+    });
+});
+ 
+</script>
+  <style>
+     body{
+        ;
+     }
+
+      
+      .card {
+    background-color: #ffffff;
+    /* just in case there no content*/
+    padding: 2% 2% 2%;
+    margin: 0 auto 25px;
+    margin-top: 50%;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+    width:30%;
+    
+    margin-top: 12%;
+}
+
+  </style>
+  
+   
+</head>
+<body  style="background-color:rgb(255, 224, 204)" >
+    
+    <div class="container">
+
+        <div class="card">
+            
+           <div align="center" >
+                 <img id="profile-img" class="img-rounded img-responsive" width="50%" border="1" src="images/Bullhorn-Logo.jpg" alt="Bullhorn logo"/>     
+           </div>  
+           <div>   
+
+                        <form id="login-form" class="form-signin" autocomplete='off' action="login" method="post">
+            
+
+                             <div align="center" class="form-group text-center">
+                                 <h3>Member Login</h3>
+                             </div>
+
+                             <div class="form-group">
+                                    <input id="inputEmail" class="form-control" type="text" placeholder="USERNAME" />
+                                    <div id="errorEmail" style="color:red;text-align:right"></div>
+                             </div>
+
+                             <div class="form-group">
+                                    <input id="inputPassword" class="form-control" type="password" placeholder="PASSWORD"/>
+                                    <div id="errorPass" style="color:red;text-align:right"></div>
+                             </div>
+                             <input type="hidden" id="empId" name="empId"/>
+                             <input type="hidden" id="empPosition" name="empPosition"/>
+
+                             <div align="center" class="form-group">
+                                      <button id="formButton1" type="button" class="btn btn-primary btn-block">Login</button>
+                             </div>
+
+                             <div>
+                                      <a href="#" id="forgotPassword" style="outline:none" class="form-check-label">Forgot Password?</a> 
+                    
+
+                            </div>
+
+
+
+                        </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Forgot password dialog box-->
+    <div class="modal" id="ModalForgotPassword" role="dialog" >
+         <div class="modal-dialog  model-lg">
+            <!-- Modal content-->
+            <div class="modal-content ">
+               <div class="modal-header">
+                  
+                  <h2 align="center" style="color:#006bb3"class="modal-title">FORGOT YOUR PASSWORD?</h2>
+                  <p style="font-size:13px;text-align: center;">Please enter the e-mail address used to register. We will send your new password to that E-mail. </p>
+               </div>
+
+               <div class="modal-body  form-signin">
+                  <form action="forgotPassword" method="post">
+                     <div class="form-group">
+                        <label for="exampleInputEmail1">Type your Email address</label>
+                        <input type="email" class="form-control" id="forgotInputEmail" placeholder="Enter email">                        
+                     </div>
+                     <div align="center">
+                                        <button data-dismiss="modal" class="btn btn-danger">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" id="formButton2">Submit</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+</body>
+</html>

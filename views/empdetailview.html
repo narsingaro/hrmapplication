@@ -1,0 +1,29 @@
+<div class="obj-list" id="newtable" aligin="center">
+        <table  id='empdetailtable'  class=" table table-responsive table-hover" >
+            </thead>
+        <tbody  id="fields">
+            <% emp1.forEach(function(emp2){ %>
+            <tr id='<%= emp2.Id %> '><td col-span='2'><b>Details of :<%= emp2.LastName %></b></td></tr>
+    <tr><td>employeeid:</td><td id='empid1'><%= emp2.empid__c %></td></tr>
+    <tr><td>employeename:</td><td id='empname'><%= emp2.LastName %></td></tr>
+    <tr><td>employeebirthdate:</td><td id='empbirthdate'><%= emp2.Birthdate %></td></tr>
+    <tr><td>employeedateofjoin:</td><td id='empjoindate'><%= emp2.Date_of_Joining__c %></td></tr>
+    <tr><td>birthdaymessage:</td><td id='empbirthmessage'><%= emp2.Birthday_Message__c %></td></tr>
+    <tr><td>annivarsarymessage:</td><td id='empannimessage'><%= emp2.Anniversary_Message__c %></td></tr>
+    <tr><td>phone:</td><td id='empphone'><%= emp2.Phone__c %></td></tr>
+    <tr><td>email:</td><td id='empemail'> <%= emp2.Email__c %></td></tr>
+    <tr><td>address:</td><td id='empaddress'><%= emp2.address__c %></td></tr>
+    <tr><td>Active:</td><td id='empactive'><%= emp2.Active__c %></td></tr>
+    <tr><td>Username:</td><td id='empUsername'><%= emp2.Username__c %></td></tr>
+    <tr><td>Password:</td><td id='empPassword'><%= emp2.Password__c %></td></tr>
+    <tr><td>Designation:</td><td id='empDesingnation'><%= emp2.Designation__c %></td></tr>
+    <% if( emp2.Reporting_Lead__r == null){ %>
+    <tr><td>Reportinglead:</td><td id='empreportinglead'>no lead</td></tr>
+    <% } else { %>
+<tr><td>Reportinglead:</td><td id='empreportinglead'><%= emp2.Reporting_Lead__r.Name %></td></tr>
+
+    <% } }); %>
+        </tbody>
+        <tr><button id="edit" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onclick="editEmployeeModal()">Edit</button></tr>
+        </table>
+    </div>

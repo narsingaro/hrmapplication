@@ -1,0 +1,33 @@
+<div align="center" >
+  <form align="center">
+    <p class="h4 mb-4">Adding Holiday</p>
+    <input type="Date"  id="sdate" placeholder="StartDate" class="form-control mb-2" style="width:40%"/>
+    <input type="textarea" id="holidayname" placeholder='holiday Name' class="form-control mb-2" style="width:40%"/>
+    <button id="addholiday" type="button"class="btn btn-info btn-block my-2" style="width:40%" >Add Holiday</button>
+  </form>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#addholiday").click(function(){
+    var today = new Date();
+    var a = new Date($("#sdate").val());
+    if($("#sdate").val() == '' || $("#holidayname").val() == '' ){
+      alert("Please Enter the values...");
+    }
+    else if(today > a)
+    {
+      alert("Today's or Future Date is allowed...");
+    }
+    else{
+      $.post("/addholiday",{date:$("#sdate").val(),holidayname:$("#holidayname").val()},function(data,status){
+        holidays();
+        alert(data);
+        $("#sdate").val('');
+        $("#holidayname").val('');
+      });
+    }
+  });
+});
+</script>
+</body>
+<html>
