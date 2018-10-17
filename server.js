@@ -220,6 +220,10 @@ app.get("/",function(req,res){
     var localOffset = d.getTimezoneOffset() * 60000;
   var utc=localTime + localOffset;
   console.log(utc);
+  offset = 5.5;   
+   var bombay = utc + (3600000*offset);
+  var  nd = new Date(bombay); 
+  console.log(nd.toLocaleString());
 	res.render("login");
 });
 
