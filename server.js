@@ -18,6 +18,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.locals.title = 'Hello';
 app.locals.moment = moment;
+
 var cronJob = cron.job("0 45 15 * * *", function(){
   console.log('testing');
   let mailtransporter = nodemailer.createTransport({
@@ -211,6 +212,14 @@ function employeeDetailview(Id,callback){
 }
 
 app.get("/",function(req,res){
+  var d=new Date()
+  var d1=d.getTimezoneOffset();
+  console.log(d);
+  console.log(d1);
+   var localTime = d.getTime();
+    var localOffset = d.getTimezoneOffset() * 60000;
+  var utc=localTime + localOffset;
+  console.log(utc);
 	res.render("login");
 });
 
