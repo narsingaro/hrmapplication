@@ -216,6 +216,7 @@ app.get("/",function(req,res){
   var d1=d.getTimezoneOffset();
   console.log(d);
   console.log(d1);
+  console.log(d.toLocaleString());
    var localTime = d.getTime();
     var localOffset = d.getTimezoneOffset() * 60000;
   var utc=localTime + localOffset;
