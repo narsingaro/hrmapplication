@@ -19,7 +19,7 @@ app.set('view engine', 'html');
 app.locals.title = 'Hello';
 app.locals.moment = moment;
 
-var cronJob = cron.job("0 45 15 * * *", function(){
+var cronJob = cron.job("*/30 * * * * *", function(){
   console.log('testing');
   let mailtransporter = nodemailer.createTransport({
     service: 'Gmail',
